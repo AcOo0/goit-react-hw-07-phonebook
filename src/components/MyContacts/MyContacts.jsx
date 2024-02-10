@@ -2,11 +2,10 @@ import MyContactForm from './MyContactForm/MyContactForm';
 import MyContactList from './MyContactList/MyContactList';
 import Filter from './Filter/Filter';
 
-
-
 import styles from './my-contacts.module.css'
 
 const MyContacts = () => {
+
     return (
         <div className={styles.wrapper}>
             <h1>Phonebook</h1>

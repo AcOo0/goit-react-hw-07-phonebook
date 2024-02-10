@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { nanoid } from "nanoid";
 
-import { getFilteredContacts } from '../../../redux/contacts/constants-selectors';
-import { addContact } from "../../../redux/contacts/contacts-slice";
+import { addContact } from "../../../redux/contacts/contacts-operations.js";
 
 import styles from './my-contact-form.module.css'
 
@@ -11,35 +10,31 @@ const INITIAL_STATE = {
     contacts: [],
     filter: '',
     name: '',
-    number: ''
+    phone: ''
 };
 
 const MyContactForm = () => {
     const [state, setState] = useState({ ...INITIAL_STATE });
-    const contacts = useSelector(getFilteredContacts);
+    // const {items} = useSelector(selectAllContacts);
     const dispatch = useDispatch();
 
-    const isDublicate = ({ name, number }) => {
-        const normalizedName = name.toLowerCase();
-        const normalizedNumber = number.trim();
+    // useEffect(() => {
+    //     dispatch(fetchContacts());
+    // }, []);
+    // const isDublicate = ({ name, phone }) => {
+    //     const normalizedName = name.toLowerCase();
+    //     const normalizedPhone = phone.trim();
         
-        const dublicate = contacts.find(item => {
-            const normalizeCurrentName = item.name.toLowerCase();
-            const normalizeCurrentNumber = item.number.trim();
-            return (normalizeCurrentName === normalizedName || normalizeCurrentNumber === normalizedNumber)
-        })
-
-        return Boolean(dublicate);
-    };
+    //     const dublicate = items.find(item => {
+    //         const normalizeCurrentName = item.name.toLowerCase();
+    //         const normalizeCurrentPhone = item.phone.trim();
+    //         return (normalizeCurrentName === normalizedName || normalizeCurrentPhone === normalizedPhone)
+    //     })
+    //     return Boolean(dublicate);
+    // };
 
     const onAddContact = (data) => {
-        if (isDublicate(data)) {
-            alert(`${data.name} or Number: ${data.number} is already in contacts.`);
-            return;
-        }
-        
-        const action = addContact(data);
-        dispatch(action);
+        dispatch(addContact(data));
     };
 
     const handleChange = ({ target }) => {
@@ -53,9 +48,9 @@ const MyContactForm = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         onAddContact({ ...state });
-        if (!isDublicate({ ...state })) {
+        // if (!isDublicate({ ...state })) {
             reset();
-        }
+        // }
     };
 
     const reset = () => {
@@ -64,9 +59,9 @@ const MyContactForm = () => {
 
     
     const contactNameId = nanoid();
-    const contactNumberId = nanoid();
+    const contactPhoneId = nanoid();
     
-    const { name, number } = state;
+    const { name, phone } = state;
 
     return (
         <form onSubmit={handleSubmit} className={styles.form}>
@@ -82,16 +77,16 @@ const MyContactForm = () => {
                     placeholder="Name" />
             </div>
             <div className={styles.formElements}>
-                <label htmlFor={contactNumberId}>Number</label>
+                <label htmlFor={contactPhoneId}>Phone</label>
                 <input
-                    value={number}
+                    value={phone}
                     onChange={handleChange}
-                    id={contactNumberId}
-                    name="number"
+                    id={contactPhoneId}
+                    name="phone"
                     required
                     pattern="^[+0-9\-\(\)\s]+$"
                     type="tel"
-                    placeholder="Number" />
+                    placeholder="Phone" />
             </div>
             <button className={styles.btn} type="submit">Add contact</button>
         </form>
